@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PokeTrade — MVP-1 prototype</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/components.css" />
+<style>
+  .index-wrap { max-width: 640px; margin: 0 auto; padding: var(--space-12) var(--space-6); display: flex; flex-direction: column; gap: var(--space-8); }
+  .index-head { text-align: center; display: flex; flex-direction: column; gap: var(--space-3); align-items: center; }
+  .page-list { display: flex; flex-direction: column; gap: var(--space-3); }
+  .page-row {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--space-4);
+    border: var(--outline); border-radius: var(--radius-card); background: var(--paper-raised);
+    box-shadow: var(--sticker-shadow); padding: var(--space-4);
+  }
+  .page-row h3 { font-size: 1rem; }
+  .page-row p { font-size: 0.8125rem; color: var(--ink-soft); margin-top: 2px; }
+  .page-row .tag { margin-left: var(--space-2); }
+</style>
+</head>
+<body>
+  <div class="index-wrap">
+    <div class="index-head">
+      <div class="wordmark">Poke<span class="dot">Trade</span></div>
+      <h1>MVP-1 prototype</h1>
+      <p class="card-meta">Build &amp; browse a collection — register/log in, search the catalog, add a card, browse the grid, open its details. Real interactions, connected across pages via <code>localStorage</code> (no backend).</p>
+      <a class="btn btn-primary" href="login.html">Start the prototype →</a>
+    </div>
+
+    <div class="page-list">
+      <div class="page-row">
+        <div><h3>1. Log in / Register<span class="tag">ACCT-01/02/04</span></h3><p>Tabbed auth screen. Either form signs you in (no real backend).</p></div>
+        <a class="btn btn-secondary" href="login.html">Open</a>
+      </div>
+      <div class="page-row">
+        <div><h3>2. Collection<span class="tag">COLL-01/02/03</span></h3><p>Filterable grid, price signal chips, holo corners on rare cards.</p></div>
+        <a class="btn btn-secondary" href="dashboard.html">Open</a>
+      </div>
+      <div class="page-row">
+        <div><h3>3. Search &amp; add<span class="tag">SRCH-01…07</span></h3><p>Search “Charizard” to see printing disambiguation; add a card and it appears on the grid.</p></div>
+        <a class="btn btn-secondary" href="search.html">Open</a>
+      </div>
+      <div class="page-row">
+        <div><h3>4. Card details<span class="tag">CARD-01…05</span></h3><p>Its own page (not just a modal) — open any card from the grid. Escape or Back returns to the collection.</p></div>
+        <a class="btn btn-secondary" href="dashboard.html">Open a card from the grid</a>
+      </div>
+      <div class="page-row">
+        <div><h3>Want List <span class="tag">MVP-3 stub</span></h3><p>Nav destination exists; screen is out of scope for MVP-1.</p></div>
+        <a class="btn btn-secondary" href="wantlist.html">Open</a>
+      </div>
+      <div class="page-row">
+        <div><h3>Trade <span class="tag">MVP-2 stub</span></h3><p>Nav destination exists; screen is out of scope for MVP-1.</p></div>
+        <a class="btn btn-secondary" href="trade.html">Open</a>
+      </div>
+    </div>
+
+    <p class="field-hint" style="text-align:center;">See <code>README.md</code> in this folder for how to run it, and <code>../ui-guideline.md</code> for the design system behind it.</p>
+  </div>
+</body>
+</html>

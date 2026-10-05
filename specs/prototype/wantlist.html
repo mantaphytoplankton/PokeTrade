@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PokeTrade — Want List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/components.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell-root"></div>
+  <script src="assets/app.js"></script>
+  <script>
+    if (PokeTradeProto.requireAuthOrRedirect()) {
+      PokeTradeProto.renderShell('wantlist', { title: 'Want List' });
+      document.getElementById('app-panel-root').innerHTML =
+        '<div class="stub-panel">' +
+        '<svg class="stub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.35-9.5-8.5C.7 9 2 5 6 5c2 0 3.5 1.2 4 2 0.5-0.8 2-2 4-2 4 0 5.3 4 3.5 7.5C19 16.65 12 21 12 21z"/></svg>' +
+        '<h3>Want List is coming in MVP-3</h3>' +
+        '<p class="card-meta">This prototype covers MVP-1 (build &amp; browse your collection). Tracking wanted cards ships next — see stories.md, WANT-01/02/03.</p>' +
+        '</div>';
+    }
+  </script>
+</body>
+</html>

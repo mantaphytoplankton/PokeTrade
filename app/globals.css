@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — see specs/ui-guideline.md §3. Keep these values in sync
+   with specs/prototype/assets/tokens.css; both are the same system.
+
+   Deliberately single-theme (no dark-mode branch) — the warm "binder" palette
+   IS the brand, not a neutral default to invert. See ui-guideline.md §3.1.
+   ========================================================================== */
+:root {
+  --color-ink: #241f3d;
+  --color-ink-soft: #57517a;
+  --color-paper: #fff8ec;
+  --color-paper-raised: #fffefb;
+
+  --color-ember-500: #ff6b4a;
+  --color-ember-700: #c7401a;
+  --color-sky-500: #2f86d6;
+  --color-sky-700: #1f5c99;
+  --color-sky-100: #e3f1fc;
+
+  --color-leaf-100: #dff3e1;
+  --color-leaf-700: #1f7a3f;
+  --color-spark-100: #fff1ce;
+  --color-spark-700: #8a5b00;
+  --color-coral-100: #fbdfdd;
+  --color-coral-700: #b23327;
+
+  --color-neutral-100: #ece8f4;
+  --color-neutral-700: #4a4468;
+
+  --radius-card: 12px;
+  --radius-pill: 999px;
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-paper: var(--color-paper);
+  --color-paper-raised: var(--color-paper-raised);
+  --color-ember-500: var(--color-ember-500);
+  --color-ember-700: var(--color-ember-700);
+  --color-sky-500: var(--color-sky-500);
+  --color-sky-700: var(--color-sky-700);
+  --color-sky-100: var(--color-sky-100);
+  --color-leaf-100: var(--color-leaf-100);
+  --color-leaf-700: var(--color-leaf-700);
+  --color-spark-100: var(--color-spark-100);
+  --color-spark-700: var(--color-spark-700);
+  --color-coral-100: var(--color-coral-100);
+  --color-coral-700: var(--color-coral-700);
+  --color-neutral-100: var(--color-neutral-100);
+  --color-neutral-700: var(--color-neutral-700);
+
+  --radius-card: var(--radius-card);
+  --radius-pill: var(--radius-pill);
+
+  --font-display: var(--font-display), system-ui, sans-serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+  --font-data: var(--font-data), ui-monospace, monospace;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+/* The thick "ink outline" focus ring — the same visual grammar as the rest
+   of the cartoon-outline design language, not a bolted-on browser default.
+   See ui-guideline.md §5. */
+:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px rgba(255, 201, 60, 0.55);
+  border-radius: 4px;
+}
+
+@keyframes holo-shift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 200%;
+  }
+}
+
+.holo-corner {
+  background-image: conic-gradient(from 0deg, #ff9ad1, #ffe08a, #9affe0, #9ac4ff, #d59aff, #ff9ad1);
+  background-size: 200% 200%;
+  animation: holo-shift 3.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .holo-corner {
+    animation: none;
+    background-image: linear-gradient(135deg, #ffe08a, #9ac4ff);
+  }
+}

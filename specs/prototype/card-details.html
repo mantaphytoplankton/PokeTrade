@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PokeTrade — Card details</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/components.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell-root"></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="assets/app.js"></script>
+  <script>
+    if (PokeTradeProto.requireAuthOrRedirect()) {
+      var params = new URLSearchParams(window.location.search);
+      var id = params.get('id');
+      var card = id ? PokeTradeProto.findCard(id) : null;
+
+      var backLink = '<a class="back-link" href="dashboard.html">' +
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>' +
+        'Back to collection</a>';
+
+      PokeTradeProto.renderShell('collection', { headerLeft: backLink });
+      var panel = document.getElementById('app-panel-root');
+
+      if (!card) {
+        panel.innerHTML = '<div class="empty-state">We couldn’t find that card in your collection. It may have been removed. ' + backLink + '</div>';
+      } else {
+        var priceText = card.price == null ? 'Unavailable' : ('$' + card.price.toFixed(2) + ' (last sale)');
+        var confidence = card.price == null ? 'Low' : (card.signal === 'green' ? 'High' : 'Medium');
+        var maxV = Math.max.apply(null, card.history.concat([1]));
+        var sparkline = card.history.length
+          ? card.history.map(function (v) { return '<i style="height:' + Math.max(4, (v / maxV) * 40) + 'px"></i>'; }).join('')
+          : '<span class="card-meta">Not enough data yet.</span>';
+        var updatedLine = card.history.length
+          ? ('Updated ' + card.updated + ' · source: ' + card.source)
+          : 'No price history available for this card yet.';
+
+        panel.innerHTML =
+          '<div class="detail-hero">' +
+          '<div class="thumb type-' + card.type + '">' + (card.type === 'placeholder' ? 'No photo yet' : PokeTradeProto.escapeHtml(card.name.charAt(0))) + '</div>' +
+          '<div style="flex:1; min-width:240px;">' +
+          '<h1>' + PokeTradeProto.escapeHtml(card.name) + '</h1>' +
+          '<p class="card-meta">' + PokeTradeProto.escapeHtml(card.set) + ' · ' + card.number + ' · ' + card.rarity + ' · ' + PokeTradeProto.typeLabel(card.type) + ' energy</p>' +
+          '<div style="margin-top: var(--space-3);">' + PokeTradeProto.chipMarkup(card.signal, card.signalLabel, card.signalDesc) + '</div>' +
+          '<div style="margin-top: var(--space-6);">' +
+          '<h3 style="margin-bottom: var(--space-2);">Price history (30 days)</h3>' +
+          '<div class="sparkline">' + sparkline + '</div>' +
+          '<p class="card-updated">' + updatedLine + '</p>' +
+          '</div>' +
+          '</div>' +
+          '</div>' +
+          '<dl class="kv-grid" style="margin-top: var(--space-8);">' +
+          '<dt>Condition</dt><dd>' + card.condition + '</dd>' +
+          '<dt>Quantity</dt><dd>' + card.qty + '</dd>' +
+          '<dt>Price</dt><dd>' + priceText + '</dd>' +
+          '<dt>Confidence</dt><dd>' + confidence + '</dd>' +
+          '</dl>' +
+          '<div class="detail-actions" style="margin-top: var(--space-8);">' +
+          '<button class="btn btn-secondary" id="tradeLinkBtn">Analyze in a trade</button>' +
+          '<button class="btn btn-danger" id="removeBtn">Remove from collection</button>' +
+          '</div>' +
+          '<p class="field-hint" style="margin-top: var(--space-3);">Press Escape to go back to your collection.</p>';
+
+        document.getElementById('tradeLinkBtn').addEventListener('click', function () {
+          window.location.href = 'trade.html';
+        });
+        document.getElementById('removeBtn').addEventListener('click', function () {
+          if (!window.confirm('Remove ' + card.name + ' from your collection?')) return;
+          PokeTradeProto.removeFromCollection(card.id);
+          PokeTradeProto.setFlash(PokeTradeProto.strings.removed);
+          window.location.href = 'dashboard.html';
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') window.location.href = 'dashboard.html';
+        });
+      }
+    }
+  </script>
+</body>
+</html>

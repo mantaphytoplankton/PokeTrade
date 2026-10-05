@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PokeTrade — Trade Analysis</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/components.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell-root"></div>
+  <script src="assets/app.js"></script>
+  <script>
+    if (PokeTradeProto.requireAuthOrRedirect()) {
+      PokeTradeProto.renderShell('trade', { title: 'Trade' });
+      document.getElementById('app-panel-root').innerHTML =
+        '<div class="stub-panel">' +
+        '<svg class="stub-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l-4 4 4 4M3 14h13M17 4l4 4-4 4M21 8H8"/></svg>' +
+        '<h3>Trade Analysis is coming in MVP-2</h3>' +
+        '<p class="card-meta">The fairness-checking agent ships once this collection flow is in place — see stories.md, SCRATCH/AGENT/TRADE features.</p>' +
+        '</div>';
+    }
+  </script>
+</body>
+</html>

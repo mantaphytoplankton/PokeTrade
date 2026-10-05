@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>PokeTrade — My collection</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="assets/tokens.css" />
+<link rel="stylesheet" href="assets/components.css" />
+</head>
+<body>
+  <div class="app-shell" id="app-shell-root"></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="assets/app.js"></script>
+  <script>
+    if (PokeTradeProto.requireAuthOrRedirect()) {
+      PokeTradeProto.renderShell('collection', { title: 'My collection' });
+
+      var panel = document.getElementById('app-panel-root');
+      panel.innerHTML =
+        '<div class="filter-bar">' +
+        '<select id="filterSet" aria-label="Filter by set"><option value="">Set: All</option><option value="Base Set">Base Set</option><option value="Jungle">Jungle</option><option value="Celebrations">Celebrations</option></select>' +
+        '<select id="filterRarity" aria-label="Filter by rarity"><option value="">Rarity: All</option><option value="Common">Common</option><option value="Uncommon">Uncommon</option><option value="Holo Rare">Holo Rare</option><option value="Rare">Rare</option></select>' +
+        '<select id="filterLanguage" aria-label="Filter by language"><option value="">Language: All</option><option value="English">English</option></select>' +
+        '<select id="sortName" aria-label="Sort by name"><option value="">Sort: none</option><option value="asc">Name A–Z</option><option value="desc">Name Z–A</option></select>' +
+        '</div>' +
+        '<div class="card-grid" id="cardGrid" aria-live="polite"></div>';
+
+      function cardSlotMarkup(c) {
+        var priceText = c.price == null ? 'Price unavailable' : ('$' + c.price.toFixed(2));
+        return (
+          '<a class="card-slot" href="card-details.html?id=' + encodeURIComponent(c.id) + '">' +
+          (c.rare ? '<span class="holo-corner" aria-hidden="true"></span>' : '') +
+          '<div class="thumb type-' + c.type + '">' + (c.type === 'placeholder' ? 'No photo yet' : PokeTradeProto.escapeHtml(c.name.charAt(0))) + '</div>' +
+          '<div class="card-title">' + PokeTradeProto.escapeHtml(c.name) + '</div>' +
+          '<div class="card-meta">' + PokeTradeProto.escapeHtml(c.set) + ' · ' + c.number + ' · ' + c.rarity + '</div>' +
+          '<div class="card-stats"><span class="card-qty">Qty ' + c.qty + ' · ' + c.condition + '</span><span class="card-price">' + priceText + '</span></div>' +
+          PokeTradeProto.chipMarkup(c.signal, c.signalLabel, c.signalDesc) +
+          '<div class="card-updated">Updated ' + c.updated + '</div>' +
+          '</a>'
+        );
+      }
+
+      // localeCompare with sensitivity 'base' treats case and accents as
+      // equal (COLL-04: "Flabébé" and "Flabebe" sort the same as a person
+      // alphabetizing by hand would). Array.sort is stable in all modern
+      // JS engines, so same-named cards keep their existing relative order
+      // without needing an explicit tie-breaker key.
+      function compareNames(a, b) {
+        return a.name.localeCompare(b.name, undefined, { sensitivity: 'base' });
+      }
+
+      function renderGrid() {
+        var setF = document.getElementById('filterSet').value;
+        var rarityF = document.getElementById('filterRarity').value;
+        var langF = document.getElementById('filterLanguage').value;
+        var sortDir = document.getElementById('sortName').value;
+        var all = PokeTradeProto.getCollection();
+        var filtered = all.filter(function (c) {
+          return (!setF || c.set === setF) && (!rarityF || c.rarity === rarityF) && (!langF || c.language === langF);
+        });
+        var grid = document.getElementById('cardGrid');
+        if (all.length === 0) {
+          grid.innerHTML = '<div class="empty-state">' + PokeTradeProto.strings.emptyGrid + '</div>';
+          return;
+        }
+        if (filtered.length === 0) {
+          grid.innerHTML = '<div class="empty-state">No cards match these filters. <a href="#" id="clearFilters">Clear filters</a></div>';
+          document.getElementById('clearFilters').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('filterSet').value = '';
+            document.getElementById('filterRarity').value = '';
+            document.getElementById('filterLanguage').value = '';
+            renderGrid();
+          });
+          return;
+        }
+        // Sort a copy of the already-filtered subset — sort never changes
+        // which cards are shown, only their order (COLL-04).
+        var sorted = filtered.slice();
+        if (sortDir === 'asc') sorted.sort(compareNames);
+        if (sortDir === 'desc') sorted.sort(function (a, b) { return compareNames(b, a); });
+        grid.innerHTML = sorted.map(cardSlotMarkup).join('');
+      }
+      ['filterSet', 'filterRarity', 'filterLanguage', 'sortName'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', renderGrid);
+      });
+      renderGrid();
+      PokeTradeProto.showFlashIfAny();
+    }
+  </script>
+</body>
+</html>
